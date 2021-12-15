@@ -1,0 +1,46 @@
+version: "2.2"
+
+services:
+  mongo:
+    image: mongo:5.0
+    container_name: admin_mongo
+    #    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongo:/data/db:rw
+      - ./init:/docker-entrypoint-initdb.d
+
+  auth:
+    image: wi4er/cerberus:0.8.0
+    container_name: admin_auth
+    working_dir: /app
+    command: npm start
+    environment:
+      DB_HOST: mongo
+      DB_USER: auth
+      DB_PASSWORD: example
+    links:
+      - mongo
+    ports:
+      - "8083:8080"
+
+  module:
+    image: node:lts
+    container_name: admin_module
+    working_dir: /app
+    command: npm run build
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./module:/app
+
+  cache:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data/
