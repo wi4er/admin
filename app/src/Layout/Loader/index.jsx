@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import ReactDOM from "react-dom";
+import context from "../../permission/context/permissionContext";
 
 class Loader extends Component {
+    static contextType = context;
     state = {
         Module: null
     };
+
+    ref = React.createRef();
 
     componentDidMount() {
         const {variable, url} = this.props;
@@ -13,26 +17,21 @@ class Loader extends Component {
             .then(res => res.text())
             .then(res => {
                 eval(res);
+                const Module = globalThis[variable].default;
 
-                this.setState({Module: globalThis[variable].default})
+                ReactDOM.render(
+                    <Module
+                        {...this.props}
+                        {...this.context}
+                    />,
+                    this.ref.current,
+                );
             });
     }
 
     render() {
-        const {Module} = this.state;
-
-        if (Module) {
-            return (
-                <Module
-                    {...this.props}
-                />
-            );
-        }
-
         return (
-            <div>
-                {"LOAD"}
-            </div>
+            <div ref={this.ref} />
         );
     }
 }
