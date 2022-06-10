@@ -8,8 +8,8 @@ class AuthForm extends React.Component {
     static contextType = permissionContext;
 
     state = {
-        userID: "000122333444455555666666",
-        password: "admin",
+        userID: "admin@mail.com",
+        password: "qwerty",
         error: "",
     };
 
@@ -67,7 +67,7 @@ class AuthForm extends React.Component {
                         autoFocus
                         margin="dense"
                         id={"userID"}
-                        label={"userID"}
+                        label={"user email"}
                         type="text"
                         fullWidth
                         variant="standard"

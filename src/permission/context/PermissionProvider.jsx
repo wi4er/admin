@@ -33,13 +33,13 @@ class PermissionProvider extends React.Component {
             .then(user => this.setState({user}));
     }
 
-    getToken(id, password) {
+    getToken(contact, password) {
         const {url} = this.props;
 
         return fetch(
-            `${url}/token/password/${id}/`,
+            `${url}/token/password/`,
             {
-                headers: {password}
+                headers: {password, contact}
             }
         )
             .then(resp => {
